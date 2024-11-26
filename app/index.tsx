@@ -1,5 +1,8 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Pressable, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+// https://icons.expo.fyi/Index/MaterialCommunityIcons/delete-circle
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { useState } from 'react';
 
@@ -30,6 +33,25 @@ export default function Index() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  interface TodoItem {
+    id: number;
+    title: string;
+    completed: boolean;
+  }
+
+  const renderItem = ({ item }: { item: TodoItem }) => (
+    <View style={styles.todoItems}>
+      <Text
+        style={[styles.todoText, item.completed && styles.completedText]}
+        onPress={() => toggleTodo(item.id)}>
+        {item.title}
+      </Text>
+      <Pressable onPress={() => deleteTodo(item.id)}>
+        <MaterialCommunityIcons name='delete-circle' size={36} color='red' selectable={undefined} />
+      </Pressable>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
@@ -46,6 +68,13 @@ export default function Index() {
           <Text style={styles.addButtonText}>Add</Text>
         </Pressable>
       </View>
+
+      <FlatList
+        data={todos} // an array (or array-like list) of items to render.
+        renderItem={renderItem} // takes an item from data and renders it into the list.
+        keyExtractor={(item) => item.id.toString()} // used to extract a unique key for a given item at the specified index.
+        contentContainerStyle={{ flexGrow: 1 }}
+      />
     </SafeAreaView>
   );
 }
@@ -85,5 +114,27 @@ const styles = StyleSheet.create({
   addButtonText: {
     fontSize: 18,
     color: 'black',
+  },
+  todoItems: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 4,
+    padding: 10,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+    width: '100%',
+    maxWidth: 1024, // iPad Pro size
+    marginHorizontal: 'auto',
+    pointerEvents: 'auto', // control whether the View can be the target of touch events.
+  },
+  todoText: {
+    flex: 1,
+    fontSize: 18,
+    color: 'white',
+  },
+  completedText: {
+    textDecorationLine: 'line-through',
+    color: 'gray',
   },
 });
