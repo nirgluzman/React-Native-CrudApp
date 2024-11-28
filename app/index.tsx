@@ -4,6 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // https://icons.expo.fyi/Index/MaterialCommunityIcons/delete-circle
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
+import { useFonts, Inter_500Medium } from '@expo-google-fonts/inter';
+
 import { useState } from 'react';
 
 import { data } from '@/data/todos';
@@ -11,6 +13,16 @@ import { data } from '@/data/todos';
 export default function Index() {
   const [todos, setTodos] = useState(data.sort((a, b) => b.id - a.id)); // sorting the data array in descending order based on the id property.
   const [text, setText] = useState('');
+
+  // load custom fonts asynchronously.
+  const [loaded, error] = useFonts({
+    Inter_500Medium,
+  });
+
+  // waiting for the Font to be loaded
+  if (!loaded && ~!error) {
+    return null;
+  }
 
   // add a new todo
   const addTodo = () => {
@@ -103,6 +115,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 10,
     fontSize: 18,
+    fontFamily: 'Inter_500Medium',
     minWidth: 0,
     color: 'white',
   },
@@ -131,6 +144,7 @@ const styles = StyleSheet.create({
   todoText: {
     flex: 1,
     fontSize: 18,
+    fontFamily: 'Inter_500Medium',
     color: 'white',
   },
   completedText: {
