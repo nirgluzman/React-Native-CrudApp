@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Pressable,
-  FlatList,
-  type ColorSchemeName,
-} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Pressable, type ColorSchemeName } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Animated, { LinearTransition } from 'react-native-reanimated';
@@ -29,7 +21,7 @@ import { ColorTokens, ThemeContextType } from '@/types/colors';
 import { ITodo } from '@/types/todo';
 
 export default function Index() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<ITodo[]>([]); // state is an array of ITodo objects.
   const [text, setText] = useState('');
 
   const { colorScheme, theme, setColorScheme } = useContext(ThemeContext) as ThemeContextType;
