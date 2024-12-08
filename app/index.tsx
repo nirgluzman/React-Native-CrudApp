@@ -11,24 +11,57 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // https://icons.expo.fyi/Index/MaterialCommunityIcons/delete-circle
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Octicons from '@expo/vector-icons/Octicons';
 
 import { useFonts, Inter_500Medium } from '@expo-google-fonts/inter';
 
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { ThemeContext } from '@/context/ThemeContext';
 import { ColorTokens, ThemeContextType } from '@/types/colors';
 
-import { data } from '@/data/todos';
+// // example data
+// import { data } from '@/data/todos';
+import { ITodo } from '@/types/todo';
 
 export default function Index() {
-  const [todos, setTodos] = useState(data.sort((a, b) => b.id - a.id)); // sorting the data array in descending order based on the id property.
+  const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
 
   const { colorScheme, theme, setColorScheme } = useContext(ThemeContext) as ThemeContextType;
+
+  // load initial data from storage on first app launch.
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('TodoApp'); // get a string value for given key.
+        const storageTodos = jsonValue != null ? JSON.parse(jsonValue) : [];
+        setTodos(storageTodos.sort((a: ITodo, b: ITodo) => b.id - a.id)); // sorting the data array in descending order based on the id property (to have the newest todo in the beginning)
+      } catch (error) {
+        console.error('Error loading todos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // save todo state to storage on state change.
+  useEffect(() => {
+    const storeData = async () => {
+      try {
+        const jsonValue = JSON.stringify(todos);
+        await AsyncStorage.setItem('TodoApp', jsonValue); // sets a string value for given key.
+      } catch (error) {
+        console.error('Error saving todos:', error);
+      }
+    };
+
+    storeData();
+  }, [todos]);
 
   // load custom fonts asynchronously.
   const [loaded, error] = useFonts({
