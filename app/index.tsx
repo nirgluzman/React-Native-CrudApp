@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, TextInput, Pressable, type ColorSchemeName } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar'; // control the status bar (the top bar of the screen that shows battery, time, etc.)
 
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
@@ -110,6 +111,8 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* control status bar visibility */}
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -145,7 +148,6 @@ export default function Index() {
           )}
         </Pressable>
       </View>
-
       <Animated.FlatList
         data={todos} // an array (or array-like list) of items to render.
         renderItem={renderItem} // takes an item from data and renders it into the list.
