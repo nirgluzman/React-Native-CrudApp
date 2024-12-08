@@ -1,3 +1,5 @@
+// https://blog.logrocket.com/how-to-use-react-context-typescript/
+
 import {
   Appearance, // exposes information about the user's appearance preferences, such as their preferred color scheme (light or dark)
   type ColorSchemeName,
