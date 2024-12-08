@@ -1,6 +1,8 @@
 // dummy todos array for testing.
 
-export const data = [
+import { ITodo } from '@/types/todo';
+
+export const data: ITodo[] = [
   {
     id: 1,
     title: 'Finish reading the book',
