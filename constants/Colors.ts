@@ -1,6 +1,8 @@
 // Colors palette
 
-export const Colors = {
+import { ColorPalette } from '@/types/colors';
+
+export const Colors: ColorPalette = {
   // light theme
   light: {
     text: 'black',
