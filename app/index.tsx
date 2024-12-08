@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Animated, { LinearTransition } from 'react-native-reanimated';
+
 // https://icons.expo.fyi/Index/MaterialCommunityIcons/delete-circle
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Octicons from '@expo/vector-icons/Octicons';
@@ -119,11 +121,13 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <FlatList
+      <Animated.FlatList
         data={todos} // an array (or array-like list) of items to render.
         renderItem={renderItem} // takes an item from data and renders it into the list.
         keyExtractor={(item) => item.id.toString()} // used to extract a unique key for a given item at the specified index.
         contentContainerStyle={{ flexGrow: 1 }}
+        itemLayoutAnimation={LinearTransition}
+        keyboardDismissMode='on-drag' // the keyboard will dismiss when the user drags down on the keyboard.
       />
     </SafeAreaView>
   );
