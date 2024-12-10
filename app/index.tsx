@@ -122,8 +122,9 @@ export default function Index() {
           style={styles.input}
           placeholder='add a new todo'
           placeholderTextColor='gray'
-          autoComplete={'off'} // disable auto-complete suggestions
-          autoCorrect={false} // disable auto-correct suggestions
+          autoComplete={'off'} // disable auto-complete suggestions.
+          autoCorrect={false} // disable auto-correct suggestions.
+          maxLength={30} // limit the maximum number of characters that can be entered.
           value={text}
           onChangeText={setText}
         />

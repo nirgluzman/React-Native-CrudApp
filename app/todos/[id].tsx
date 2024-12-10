@@ -84,6 +84,9 @@ export default function EditScreen() {
           style={styles.input}
           placeholder='Edit todo'
           placeholderTextColor='gray'
+          autoComplete={'off'} // disable auto-complete suggestions.
+          autoCorrect={false} // disable auto-correct suggestions.
+          maxLength={30} // limit the maximum number of characters that can be entered.
           value={todo?.title || ''}
           onChangeText={(text) => setTodo((prev) => ({ ...prev, title: text }))}
         />
