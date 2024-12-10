@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, TextInput, Pressable, type ColorSchemeName } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context'; // render content within the safe area boundaries of a device.
 import { StatusBar } from 'expo-status-bar'; // control the status bar (the top bar of the screen that shows battery, time, etc.)
+
+import { RelativePathString, useRouter } from 'expo-router'; // navigation management using a file-based routing system, https://docs.expo.dev/versions/latest/sdk/router/
 
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
@@ -10,20 +12,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Octicons from '@expo/vector-icons/Octicons';
 
-import { useFonts, Inter_500Medium } from '@expo-google-fonts/inter';
+import { useFonts, Inter_500Medium } from '@expo-google-fonts/inter'; // integrate Google Font packages.
 
 import { useState, useEffect, useContext } from 'react';
 
 import { ThemeContext } from '@/context/ThemeContext';
 import { ColorTokens, ThemeContextType } from '@/types/colors';
+import { ITodo } from '@/types/todo';
 
 // // example data
 // import { data } from '@/data/todos';
-import { ITodo } from '@/types/todo';
 
 export default function Index() {
   const [todos, setTodos] = useState<ITodo[]>([]); // state is an array of ITodo objects.
-  const [text, setText] = useState('');
+  const [text, setText] = useState<string>('');
+
+  const router = useRouter(); // returns the Router object for imperative navigation.
 
   const { colorScheme, theme, setColorScheme } = useContext(ThemeContext) as ThemeContextType;
 
@@ -82,6 +86,11 @@ export default function Index() {
     );
   };
 
+  // navigate to todo edit screen
+  const editTodo = (id: number) => {
+    router.push(`/todos/${id}` as RelativePathString);
+  };
+
   // delete a todo
   const deleteTodo = (id: number) => {
     setTodos(todos.filter((todo) => todo.id !== id));
@@ -90,19 +99,14 @@ export default function Index() {
   // create styles based on the current theme and color scheme
   const styles = createStyles(theme, colorScheme);
 
-  interface TodoItem {
-    id: number;
-    title: string;
-    completed: boolean;
-  }
-
-  const renderItem = ({ item }: { item: TodoItem }) => (
+  const renderItem = ({ item }: { item: ITodo }) => (
     <View style={styles.todoItems}>
-      <Text
-        style={[styles.todoText, item.completed && styles.completedText]}
-        onPress={() => toggleTodo(item.id)}>
-        {item.title}
-      </Text>
+      <Pressable
+        onPress={() => editTodo(item.id)}
+        onLongPress={() => toggleTodo(item.id)} // called if the time after onPressIn lasts longer than 500 milliseconds (configurable), https://reactnative.dev/docs/pressable#onlongpress
+      >
+        <Text style={[styles.todoText, item.completed && styles.completedText]}>{item.title}</Text>
+      </Pressable>
       <Pressable onPress={() => deleteTodo(item.id)}>
         <MaterialCommunityIcons name='delete-circle' size={36} color='red' selectable={undefined} />
       </Pressable>
